@@ -1,49 +1,50 @@
-import React from 'react'
-import Home from './pages/Home'
-import Login from './pages/Login'
-import CreatePost from './pages/CreatePost'
-import './app.css'
+import React, { useState } from 'react';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import CreatePost from './pages/CreatePost';
+import './app.css';
 import {
-  createBrowserRouter,
-  createRoutesFromElements,
+  BrowserRouter as Router,
+  Routes,
   Route,
-  RouterProvider,Link, BrowserRouter as Router,Routes,
-} from "react-router-dom";
-// const router = createBrowserRouter(
-//   createRoutesFromElements(
-//     <Route path="/">
-    
-//     <Route index element={<Home />} />
-//     <Route path="/login" element={<Login />} />
-//     <Route path="/createpost" element={<CreatePost />} />
-//   </Route>
-    
-      
-     
-//   )
-// );
+  Link
+} from 'react-router-dom';
+import { signOut } from 'firebase/auth';
+import { auth } from './Firebase-config';
+
 function App() {
+  const [isAuth, setIsAuth] = useState(false);
+
+  const logUserOut = () => {
+    signOut(auth).then(() => {
+      localStorage.clear();
+      setIsAuth(false);
+      // Navigate to the login page after logout
+      window.location.href = '/login'; // Redirect using window.location
+    });
+  };
 
   return (
-    <>
-     <Router>
-     <nav>
-      <Link to="/" >Home</Link>
-      <Link to="/createpost" >createpost</Link>
-      <Link to="/login" >login</Link>
-     </nav>
-     <Routes> 
-      <Route path='/' element={<Home />} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/createpost' element={<CreatePost />} />
+    <Router>
+      <nav>
+        <Link to="/">Home</Link>
+        <Link to="/createpost">Create Post</Link>
+        {!isAuth ? (
+          <Link to="/login">Login</Link>
+        ) : (
+          <button onClick={logUserOut}>Log Out</button>
+        )}
+      </nav>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/login"
+          element={<Login setIsAuth={setIsAuth} />}
+        />
+        <Route path="/createpost" element={<CreatePost />} />
       </Routes>
-     </Router>
-     
-     {/* <RouterProvider router={router} /> */}
-
-      
-    </>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;
