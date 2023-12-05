@@ -13,15 +13,16 @@ export default function Login({setIsAuth}) {
       // console.log(result.user.photoURL)
       navigate("/")
     })
+    
 
   }
+  
   return (
-    <div>
+    <div className='loginPage'>
       <p>Sign in With Google </p>
       <button className='login-with-google-btn' onClick={signInWithGoogle}>
       Sign in With Google
       </button>
-      <p>the user is </p>
     </div>
   )
 }
